@@ -3,14 +3,38 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+# ブラウザでアクセスした時に表示するチャット画面の設計図 (HTML)
+HTML_PAGE = """
+
+
+
+    
+    マイエージェント
+    
+
+
+    🤖 エージェントとチャット
+    
+    送信
+    
+    
+        エージェントの回答:
+        ここに回答が表示されます
+    
+
+    
+
+
+"""
+
 @app.route("/", methods=["GET"])
-def hello():
-    return "Cloud Runのエージェントが元気に稼働中です！"
+def home():
+    # URLを開いたら、上のチャット画面を表示する
+    return HTML_PAGE
 
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
-    # ユーザーからのメッセージを受け取る
     message = data.get("message", "")
 
     # 質問の内容に合わせて回答を変えるルール
@@ -21,7 +45,6 @@ def chat():
     elif "名前" in message:
         reply = "私はCloud Run上で動くシンプルなエージェントです。"
     else:
-        # 知らない質問が来た場合
         reply = f"「{message}」という質問ですね。まだ勉強中なので、もう少し簡単な言葉で話しかけてもらえると嬉しいです！"
 
     return jsonify({"response": reply})
